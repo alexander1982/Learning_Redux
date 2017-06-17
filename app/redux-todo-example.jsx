@@ -38,11 +38,34 @@ console.log('Starting redux example 2');
 //var res = changeProps(startingValue);
 //console.log(startingValue);
 //console.log(res);
-var stateDefault = {name: 'Anonymous', searchText: '', showCompleted: false, todos: []};
+
+var stateDefault = { name: 'Anonymous', searchText: '', showCompleted: false, todos: [] };
 var reducer = (state = stateDefault, action) => {
-	return state;
+	switch(action.type){
+		case 'CHANGE_NAME':
+			return {
+				...state,
+				name: action.name
+			};
+		case 'CHANGE_SEARCH_TEXT':
+			return {
+				...state,
+				searchText: action.searchText
+			};
+		default:
+			return state;
+	}
 };
 var store = redux.createStore(reducer);
+console.log('Current state', store.getState());
 
+store.dispatch({
+	               type: 'CHANGE_NAME',
+	               name: 'Alex'
+               });
+store.dispatch({
+	               type: 'CHANGE_SEARCH_TEXT',
+	               searchText: 'Hello world!'
+               });
 
-console.log('Current state',store.getState());
+console.log('Name should be Alex', store.getState());

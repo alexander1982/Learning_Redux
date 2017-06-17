@@ -21,4 +21,4 @@ ReactDOM.render(
 );
 
 require('./redux-example.jsx');
-require('./redux-todo-example');
+require('./redux-todo-example.jsx');
