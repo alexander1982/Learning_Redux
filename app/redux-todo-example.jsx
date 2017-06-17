@@ -39,67 +39,58 @@ console.log('Starting redux example 2');
 //console.log(startingValue);
 //console.log(res);
 
-var stateDefault = {
-	name         : 'Anonymous',
-	searchText   : '',
-	showCompleted: false,
-	todos        : [],
-	hobbies      : [],
-	movies       : []
-};
-
 var nextHobbyId = 1;
 var nextMovieId = 1;
 
-var reducer = (state = stateDefault, action) => {
+var nameReducer = (state = 'Anonymous', action) => {
 	switch(action.type){
 		case 'CHANGE_NAME':
-			return {
-				...state,
-				name: action.name
-			};
-		case 'CHANGE_SEARCH_TEXT':
-			return {
-				...state,
-				searchText: action.searchText
-			};
-		case 'ADD_HOBBY':
-			return {
-				...state,
-				hobbies: [
-					...state.hobbies,
-					{
-						id   : nextHobbyId++,
-						hobby: action.hobby
-					}
-				]
-			};
-		case 'REMOVE_HOBBY':
-			return {
-					...state,
-					hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
-			};
-		case 'ADD_MOVIE':
-			return {
-				...state,
-				movies: [
-					...state.movies,
-					{
-						id   : nextMovieId++,
-						movie: action.movie,
-						genre: action.genre
-					}
-				]
-			};
-		case 'REMOVE_MOVIE':
-			return {
-				...state,
-				movies: state.movies.filter((movie) => movie.id != action.id)
-			};
+			return action.name;
 		default:
 			return state;
 	}
 };
+
+var hobbyReducer = (state = [], action) => {
+	switch(action.type){
+		case 'ADD_HOBBY':
+			return [
+				...state,
+				{
+					id   : nextHobbyId++,
+					hobby: action.hobby
+				}
+			];
+		case 'REMOVE_HOBBY':
+			return state.filter((hobby) => hobby.id !== action.id);
+		default:
+			return state;
+	}
+};
+
+var movieReducer = (state = [], action) => {
+	switch(action.type) {
+		case 'ADD_MOVIE':
+			return [
+				...state,
+				{
+					id: nextMovieId++,
+					movie: action.movie
+				}
+			];
+		case 'REMOVE_MOVIE':
+			return state.filter((movie) => movie.id !== action.id);
+		default:
+			return state;
+	}
+};
+
+var reducer = redux.combineReducers({
+	                                    name : nameReducer,
+	                                    hobbies: hobbyReducer,
+																			movies: movieReducer
+                                    });
+
 var store = redux.createStore(reducer, redux.compose(
 window.devToolsExtension? window.devToolsExtension() : f => f
 ));
@@ -111,7 +102,6 @@ var unsubscribe = store.subscribe(() => {
 });
 store.subscribe(() => {
 	var state = store.getState();
-	console.log('Text is ', state.searchText);
 	document.getElementById('app').innerHTML = state.searchText + ' ' + state.name;
 	console.log('Current state', store.getState());
 });
@@ -142,10 +132,9 @@ store.dispatch({
                });
 
 store.dispatch({
-	               type : 'REMOVE_HOBBY',
-	               id: 1
+	               type: 'REMOVE_HOBBY',
+	               id  : 1
                });
-
 
 store.dispatch({
 	               type      : 'CHANGE_SEARCH_TEXT',
@@ -165,7 +154,7 @@ store.dispatch({
                });
 
 store.dispatch({
-	               type : 'REMOVE_MOVIE',
-	               id: 1
+	               type: 'REMOVE_MOVIE',
+	               id  : 1
                });
 
