@@ -1,6 +1,6 @@
 var redux = require('redux');
 
-console.log('Starting redux example');
+console.log('Starting redux example 2');
 
 //function add(a, b) {
 //	return a + b;
@@ -38,14 +38,11 @@ console.log('Starting redux example');
 //var res = changeProps(startingValue);
 //console.log(startingValue);
 //console.log(res);
-
-var reducer = (state = {name: 'Anonymous'}, action) => {
+var stateDefault = {name: 'Anonymous', searchText: '', showCompleted: false, todos: []};
+var reducer = (state = stateDefault, action) => {
 	return state;
 };
 var store = redux.createStore(reducer);
 
-var currentState = store.getState();
-console.log('Current state ' + currentState);
 
-
-
+console.log('Current state',store.getState());
